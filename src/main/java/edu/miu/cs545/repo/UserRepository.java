@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
@@ -15,4 +16,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     @Query(value = "SELECT u FROM User u JOIN u.posts p WHERE p.title LIKE :title ")
     List<User> getUserFilteredPostTitle(String title);
+
+    Optional<User> findByUsername(String username);
 }
