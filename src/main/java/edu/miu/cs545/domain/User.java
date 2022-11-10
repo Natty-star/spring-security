@@ -20,4 +20,7 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn
     private List<Post> posts;
+    @ManyToMany
+    @JoinTable
+    private List<Role> roles;
 }
