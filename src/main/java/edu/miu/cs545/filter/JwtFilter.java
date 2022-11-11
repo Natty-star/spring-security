@@ -35,10 +35,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String username = null;
         String jwt = null;
+
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
             jwt = authorizationHeader.substring(7);
             try {
                 username = jwtUtil.getUsernameFromToken(jwt);
+                System.out.println(username);
             }catch (ExpiredJwtException e){
                 //TODO
                 System.out.println("some thing happened");
@@ -46,6 +48,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
+            System.out.println(username);
             var userDetails = userDetailsService.loadUserByUsername(username);
             boolean isTokenValid = jwtUtil.validateToken(jwt);
             if (isTokenValid) {

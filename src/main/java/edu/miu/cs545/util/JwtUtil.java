@@ -12,15 +12,18 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
     private final String SECRET_KEY  = "secret";
-    private final long expiration = 1 * 60 * 60 * 60;
+    private final long expiration = 10 * 60 * 60 * 60;
 
     public String getUsernameFromToken(String token){
 
-        String result = "";
+        String result = null;
         try {
-            result = extractAllClaims(token).getSubject();
-
-        }catch (ExpiredJwtException e) {
+            result = Jwts.parser()
+                    .setSigningKey(SECRET_KEY)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+        } catch (ExpiredJwtException e) {
             System.out.println(e.getMessage());
             throw e;
         } catch (Exception e) {
@@ -60,11 +63,11 @@ public class JwtUtil {
     }
 
 
-    public String doGenerateToken(Map<String, Object> claims, String subject) {
+    private String doGenerateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
-                .setIssuedAt(new Date())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 .compact();
