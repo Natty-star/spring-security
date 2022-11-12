@@ -13,6 +13,7 @@ import java.util.function.Function;
 public class JwtUtil {
     private final String SECRET_KEY  = "secret";
     private final long expiration = 10 * 60 * 60 * 60;
+    private final long refreshExpiration = 5 * 60 * 60 * 60 * 60;
 
     public String getUsernameFromToken(String token){
 
@@ -69,6 +70,15 @@ public class JwtUtil {
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                .compact();
+    }
+
+    public String generateRefreshToken(String email) {
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + refreshExpiration))
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 .compact();
     }
