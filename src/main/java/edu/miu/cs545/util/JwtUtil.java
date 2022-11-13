@@ -74,9 +74,19 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String generateRefreshToken(String email) {
+    //method overload
+    public String doGenerateToken(String subject){
         return Jwts.builder()
-                .setSubject(email)
+                .setSubject(subject)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(SignatureAlgorithm.HS512,SECRET_KEY)
+                .compact();
+    }
+
+    public String generateRefreshToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + refreshExpiration))
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
@@ -101,6 +111,14 @@ public class JwtUtil {
             System.out.println(e.getMessage());
         }
         return false;
+    }
+    public String getSubject(String token){
+        return Jwts
+                .parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 
 
