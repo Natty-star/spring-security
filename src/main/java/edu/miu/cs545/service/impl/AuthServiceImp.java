@@ -51,7 +51,7 @@ public class AuthServiceImp implements AuthService {
             var isAccessTokenExpired = jwtUtil.isTokenExpired(refreshTokenRequest.getAccessToken());
             if (isAccessTokenExpired){
                 final String accessToken = jwtUtil.doGenerateToken(jwtUtil.getSubject(refreshTokenRequest.getRefreshToken()));
-                //I also regenerate the refresh token when ever the access token expire this helps to prevent if the refresh token is stolen
+                //I  regenerate the refresh token when ever the access token expire this helps to prevent if the refresh token is stolen
                 //every time when the access token expired without the user interference the refresh token help us to get new access token
                 final String refreshToken = jwtUtil.generateRefreshToken(jwtUtil.getSubject(refreshTokenRequest.getRefreshToken()));
                 var loginResponse = new LoginResponse(accessToken, refreshToken);

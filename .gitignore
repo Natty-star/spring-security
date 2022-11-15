@@ -1,5 +1,6 @@
-./target
+
 mvnw.cmd
 restApi.iml
 mvnw.cmd
 .idea
+/target/
